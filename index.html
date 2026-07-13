@@ -6,6 +6,7 @@
   <title>버그캡쳐 V1.0</title>
   <link rel="stylesheet" href="./css/main.css">
   <link rel="stylesheet" href="./css/step5-5.css">
+  <link rel="stylesheet" href="./css/step5-6.css">
 </head>
 <body>
   <main class="app-shell">
@@ -43,28 +44,15 @@
       </section>
 
       <section class="info-panel">
-        <div>
-          <span>현재 지역</span>
-          <strong id="regionName">호박사 연구소</strong>
-        </div>
-        <div>
-          <span>가상 좌표</span>
-          <strong id="positionText">0, 0</strong>
-        </div>
-        <div class="wide-info">
-          <span>현재 임무</span>
-          <strong id="questSummary">없음</strong>
-        </div>
+        <div><span>현재 지역</span><strong id="regionName">호박사 연구소</strong></div>
+        <div><span>가상 좌표</span><strong id="positionText">0, 0</strong></div>
+        <div class="wide-info"><span>현재 임무</span><strong id="questSummary">없음</strong></div>
       </section>
 
       <button id="travelButton" class="primary hidden" type="button">들판으로 나가기</button>
-
       <section id="moveControls" class="move-controls hidden" aria-label="가상 이동 조작">
         <button type="button" data-dx="0" data-dy="-1">▲</button>
-        <div>
-          <button type="button" data-dx="-1" data-dy="0">◀</button>
-          <button type="button" data-dx="1" data-dy="0">▶</button>
-        </div>
+        <div><button type="button" data-dx="-1" data-dy="0">◀</button><button type="button" data-dx="1" data-dy="0">▶</button></div>
         <button type="button" data-dx="0" data-dy="1">▼</button>
       </section>
 
@@ -73,7 +61,6 @@
       <button id="loadButton" class="secondary" type="button">저장 불러오기</button>
       <button id="resetButton" class="ghost" type="button">테스트 데이터 초기화</button>
       <input id="fileInput" type="file" accept=".json,application/json" hidden>
-
       <p id="status" class="status">호박사를 눌러 대화를 시작하세요.</p>
     </section>
   </main>
@@ -91,12 +78,7 @@
     <section class="dialog-box">
       <div class="speaker-row"><span class="speaker-icon">📋</span><strong>신입 Capcha 시험</strong></div>
       <p>연구소 인근 들판에서 다음 곤충을 채집하세요.</p>
-      <ul class="quest-list">
-        <li>일개미 <span>미완료</span></li>
-        <li>장군개미 <span>미완료</span></li>
-        <li>여왕개미 <span>미완료</span></li>
-        <li>메뚜기 <span>미완료</span></li>
-      </ul>
+      <ul class="quest-list"><li>일개미 <span>미완료</span></li><li>장군개미 <span>미완료</span></li><li>여왕개미 <span>미완료</span></li><li>메뚜기 <span>미완료</span></li></ul>
       <button id="closeQuestButton" type="button">닫기</button>
     </section>
   </div>
@@ -126,7 +108,28 @@
     </section>
   </div>
 
+  <div id="captureGameOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog-box capture-game-box">
+      <div class="capture-game-icon">🥅 🐜</div>
+      <p class="discovery-kicker">채집 타이밍</p>
+      <h2>초록 구간에서 멈추세요</h2>
+      <div id="timingTrack" class="timing-track">
+        <div id="timingZone" class="timing-zone"></div>
+        <div id="timingPerfect" class="timing-zone-perfect"></div>
+        <div id="timingMarker" class="timing-marker"></div>
+      </div>
+      <p id="captureResult" class="capture-result"></p>
+      <p class="capture-help">진한 초록은 PERFECT, 연한 초록은 GREAT 또는 GOOD 구간입니다.</p>
+      <div class="capture-game-actions">
+        <button id="stopTimingButton" class="capture-stop" type="button">지금!</button>
+        <button id="retryTimingButton" class="capture-retry" type="button" hidden>다시 시도</button>
+        <button id="exitTimingButton" class="capture-exit" type="button">들판으로 돌아가기</button>
+      </div>
+    </section>
+  </div>
+
   <script src="./js/app.js"></script>
   <script src="./js/step5-5.js"></script>
+  <script src="./js/step5-6.js"></script>
 </body>
 </html>
