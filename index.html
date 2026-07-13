@@ -3,37 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>버그캡쳐 V1.0</title>
+  <title>버그캡쳐 V1.0 - 호박사 연구소</title>
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
   <main class="app-shell">
-    <section class="panel">
-      <p class="eyebrow">BUG CAPTURE</p>
-      <h1>버그캡쳐 V1.0</h1>
-      <p id="status">프로젝트 골격이 정상적으로 실행되었습니다.</p>
+    <section class="game-card">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">BUG CAPTURE</p>
+          <h1>호박사 연구소</h1>
+        </div>
+        <span id="capchaStatus" class="badge">신입 Capcha 후보</span>
+      </header>
 
-      <div class="status-grid">
+      <section class="lab-scene" aria-label="호박사 연구소">
+        <div class="glass-dome"></div>
+        <div class="plant plant-left">🌿</div>
+        <div class="plant plant-right">🌱</div>
+        <button id="professorButton" class="professor" type="button" aria-label="호박사와 대화">
+          <span class="professor-icon">🥼</span>
+          <span class="professor-name">호박사</span>
+          <span class="talk-hint">눌러서 대화</span>
+        </button>
+      </section>
+
+      <section class="info-panel">
         <div>
           <span>현재 지역</span>
           <strong id="regionName">호박사 연구소</strong>
         </div>
         <div>
-          <span>가상 좌표</span>
-          <strong id="positionText">0, 0</strong>
+          <span>현재 임무</span>
+          <strong id="questSummary">없음</strong>
         </div>
-      </div>
+      </section>
 
-      <button id="testMoveButton" type="button">테스트 이동</button>
-      <button id="saveButton" type="button" class="secondary">저장 테스트</button>
-      <button id="loadButton" type="button" class="secondary">저장 불러오기</button>
+      <button id="questButton" class="secondary" type="button">임무 확인</button>
+      <button id="saveButton" class="secondary" type="button">저장</button>
+      <button id="loadButton" class="secondary" type="button">저장 불러오기</button>
+      <button id="resetButton" class="ghost" type="button">테스트 데이터 초기화</button>
       <input id="fileInput" type="file" accept=".json,application/json" hidden>
 
-      <p class="note">
-        브라우저가 로컬 저장을 막으면 자동으로 저장 파일을 내려받습니다.
-      </p>
+      <p id="status" class="status">호박사를 눌러 대화를 시작하세요.</p>
     </section>
   </main>
+
+  <div id="dialogOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog-box">
+      <div class="speaker-row">
+        <span class="speaker-icon">🥼</span>
+        <strong>호박사</strong>
+      </div>
+      <p id="dialogText" class="dialog-text"></p>
+      <div id="dialogChoices" class="dialog-choices"></div>
+      <button id="nextDialogButton" type="button">다음</button>
+    </section>
+  </div>
+
+  <div id="questOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog-box">
+      <div class="speaker-row">
+        <span class="speaker-icon">📋</span>
+        <strong>신입 Capcha 시험</strong>
+      </div>
+      <p>연구소 인근 들판에서 다음 곤충을 채집하세요.</p>
+      <ul class="quest-list">
+        <li>일개미 <span>미완료</span></li>
+        <li>장군개미 <span>미완료</span></li>
+        <li>여왕개미 <span>미완료</span></li>
+        <li>메뚜기 <span>미완료</span></li>
+      </ul>
+      <button id="closeQuestButton" type="button">닫기</button>
+    </section>
+  </div>
+
   <script src="./js/app.js"></script>
 </body>
 </html>
