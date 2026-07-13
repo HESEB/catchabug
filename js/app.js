@@ -27,8 +27,16 @@
   }
 
   var state = defaultState();
+  var dialogIndex = 0;
 
+  var screenTitle = document.getElementById("screenTitle");
+  var labScene = document.getElementById("labScene");
+  var fieldScene = document.getElementById("fieldScene");
+  var playerMarker = document.getElementById("playerMarker");
   var professorButton = document.getElementById("professorButton");
+  var travelButton = document.getElementById("travelButton");
+  var moveControls = document.getElementById("moveControls");
+  var moveButtons = moveControls.querySelectorAll("button[data-dx]");
   var questButton = document.getElementById("questButton");
   var saveButton = document.getElementById("saveButton");
   var loadButton = document.getElementById("loadButton");
@@ -37,12 +45,13 @@
   var statusEl = document.getElementById("status");
   var questSummary = document.getElementById("questSummary");
   var capchaStatus = document.getElementById("capchaStatus");
+  var regionName = document.getElementById("regionName");
+  var positionText = document.getElementById("positionText");
 
   var dialogOverlay = document.getElementById("dialogOverlay");
   var dialogText = document.getElementById("dialogText");
   var dialogChoices = document.getElementById("dialogChoices");
   var nextDialogButton = document.getElementById("nextDialogButton");
-
   var questOverlay = document.getElementById("questOverlay");
   var closeQuestButton = document.getElementById("closeQuestButton");
 
@@ -52,8 +61,6 @@
     "신입 Capcha가 되려면 먼저 현장 채집 능력을 증명해야 하네.",
     "연구소 인근 들판에서 일개미, 장군개미, 여왕개미, 메뚜기를 한 마리씩 채집해 오게."
   ];
-
-  var dialogIndex = 0;
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -81,7 +88,6 @@
     if (data.pokedex) fresh.pokedex = data.pokedex;
     if (Array.isArray(data.ownedBugs)) fresh.ownedBugs = data.ownedBugs;
     if (data.inventory) fresh.inventory = data.inventory;
-
     return fresh;
   }
 
@@ -141,12 +147,34 @@
     }
   }
 
+  function renderPlayerPosition() {
+    var left = 50 + Math.max(-4, Math.min(4, state.world.x)) * 7;
+    var top = 58 + Math.max(-3, Math.min(3, state.world.y)) * 8;
+    playerMarker.style.left = left + "%";
+    playerMarker.style.top = top + "%";
+  }
+
   function render() {
     var quest = state.quests.main_capcha_test;
+    var inField = state.world.regionId === "first_field";
+
     questSummary.textContent = quest.accepted ? "신입 Capcha 시험" : "없음";
     capchaStatus.textContent = state.player.status;
+    regionName.textContent = inField ? "시작마을 인근 들판" : "호박사 연구소";
+    positionText.textContent = state.world.x + ", " + state.world.y;
+    screenTitle.textContent = inField ? "시작마을 인근 들판" : "호박사 연구소";
+
+    labScene.classList.toggle("hidden", inField);
+    fieldScene.classList.toggle("hidden", !inField);
+    moveControls.classList.toggle("hidden", !inField);
+
+    travelButton.classList.toggle("hidden", !quest.accepted);
+    travelButton.textContent = inField ? "연구소로 돌아가기" : "들판으로 나가기";
+
     questButton.disabled = !quest.accepted;
     questButton.style.opacity = quest.accepted ? "1" : ".45";
+
+    if (inField) renderPlayerPosition();
   }
 
   function closeDialog() {
@@ -157,13 +185,9 @@
     dialogIndex = 0;
     dialogChoices.innerHTML = "";
     nextDialogButton.hidden = false;
-
-    if (state.quests.main_capcha_test.accepted) {
-      dialogText.textContent = "아직 시험은 끝나지 않았네. 들판에서 지정한 네 종류의 곤충을 채집해 오게.";
-    } else {
-      dialogText.textContent = introLines[dialogIndex];
-    }
-
+    dialogText.textContent = state.quests.main_capcha_test.accepted
+      ? "아직 시험은 끝나지 않았네. 들판에서 지정한 네 종류의 곤충을 채집해 오게."
+      : introLines[dialogIndex];
     dialogOverlay.classList.remove("hidden");
   }
 
@@ -178,7 +202,7 @@
       state.quests.main_capcha_test.accepted = true;
       saveToBrowser();
       render();
-      dialogText.textContent = "좋아! 이걸로 시험이 시작됐네. 곤충들을 놀라게 하지 않도록 천천히 접근하게.";
+      dialogText.textContent = "좋아! 연구소 밖으로 나가 들판을 먼저 둘러보게.";
       dialogChoices.innerHTML = "";
 
       var confirmButton = document.createElement("button");
@@ -186,7 +210,7 @@
       confirmButton.textContent = "확인";
       confirmButton.addEventListener("click", function () {
         closeDialog();
-        statusEl.textContent = "신입 Capcha 시험을 수락했습니다.";
+        statusEl.textContent = "임무를 수락했습니다. 들판으로 나갈 수 있습니다.";
       });
       dialogChoices.appendChild(confirmButton);
     });
@@ -210,7 +234,6 @@
       closeDialog();
       return;
     }
-
     dialogIndex += 1;
     if (dialogIndex < introLines.length) {
       dialogText.textContent = introLines[dialogIndex];
@@ -221,6 +244,30 @@
 
   dialogOverlay.addEventListener("click", function (event) {
     if (event.target === dialogOverlay) closeDialog();
+  });
+
+  travelButton.addEventListener("click", function () {
+    if (!state.quests.main_capcha_test.accepted) return;
+
+    if (state.world.regionId === "research_lab") {
+      state.world.regionId = "first_field";
+      statusEl.textContent = "시작마을 인근 들판에 도착했습니다.";
+    } else {
+      state.world.regionId = "research_lab";
+      statusEl.textContent = "호박사 연구소로 돌아왔습니다.";
+    }
+    saveToBrowser();
+    render();
+  });
+
+  moveButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      if (state.world.regionId !== "first_field") return;
+      state.world.x += Number(button.getAttribute("data-dx"));
+      state.world.y += Number(button.getAttribute("data-dy"));
+      render();
+      statusEl.textContent = "들판에서 한 칸 이동했습니다.";
+    });
   });
 
   questButton.addEventListener("click", function () {
@@ -238,7 +285,7 @@
 
   saveButton.addEventListener("click", function () {
     if (saveToBrowser()) {
-      statusEl.textContent = "현재 진행 상태를 저장했습니다.";
+      statusEl.textContent = "현재 지역과 좌표를 저장했습니다.";
     } else {
       downloadSaveFile();
       statusEl.textContent = "브라우저 저장이 차단되어 저장 파일을 내려받았습니다.";
@@ -248,7 +295,7 @@
   loadButton.addEventListener("click", function () {
     if (loadFromBrowser()) {
       render();
-      statusEl.textContent = "브라우저 저장을 불러왔습니다.";
+      statusEl.textContent = "저장된 지역과 좌표를 불러왔습니다.";
     } else {
       fileInput.value = "";
       fileInput.click();
@@ -281,7 +328,6 @@
   resetButton.addEventListener("click", function () {
     var ok = window.confirm("테스트 데이터를 초기화할까요?");
     if (!ok) return;
-
     state = defaultState();
     if (storageAvailable()) localStorage.removeItem(SAVE_KEY);
     render();
