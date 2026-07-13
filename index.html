@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>버그캡쳐 V1.0</title>
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="panel">
+      <p class="eyebrow">BUG CAPTURE</p>
+      <h1>버그캡쳐 V1.0</h1>
+      <p id="status">프로젝트 골격이 정상적으로 실행되었습니다.</p>
+
+      <div class="status-grid">
+        <div>
+          <span>현재 지역</span>
+          <strong id="regionName">호박사 연구소</strong>
+        </div>
+        <div>
+          <span>가상 좌표</span>
+          <strong id="positionText">0, 0</strong>
+        </div>
+      </div>
+
+      <button id="testMoveButton" type="button">테스트 이동</button>
+      <button id="saveButton" type="button" class="secondary">저장 테스트</button>
+      <button id="loadButton" type="button" class="secondary">저장 불러오기</button>
+      <input id="fileInput" type="file" accept=".json,application/json" hidden>
+
+      <p class="note">
+        브라우저가 로컬 저장을 막으면 자동으로 저장 파일을 내려받습니다.
+      </p>
+    </section>
+  </main>
+  <script src="./js/app.js"></script>
+</body>
+</html>
