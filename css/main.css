@@ -82,6 +82,41 @@ h1 { margin: 6px 0 0; font-size: 28px; }
   font-size: 44px;
   transition: left .18s ease, top .18s ease;
   filter: drop-shadow(0 5px 4px rgba(0,0,0,.18));
+  z-index: 2;
+}
+.bug-marker {
+  position: absolute;
+  left: 64%;
+  top: 34%;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  padding: 0;
+  border: 3px solid rgba(255,255,255,.92);
+  border-radius: 50%;
+  background: rgba(255,255,255,.82);
+  box-shadow: 0 8px 18px rgba(42,70,40,.2);
+  transform: translate(-50%, -50%);
+  animation: bugPulse 1.5s ease-in-out infinite;
+}
+.bug-marker:disabled { opacity: .55; animation: none; }
+.bug-icon { font-size: 30px; }
+.bug-label {
+  position: absolute;
+  right: -6px;
+  top: -8px;
+  min-width: 24px;
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: #d84b44;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+}
+@keyframes bugPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
 }
 .info-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
 .info-panel div { padding: 14px; border-radius: 16px; background: #f3f7f0; }
@@ -116,6 +151,7 @@ h1 { margin: 6px 0 0; font-size: 28px; }
   place-items: end center;
   padding: 18px;
   background: rgba(12, 25, 15, .45);
+  z-index: 10;
 }
 .dialog-box {
   width: min(100%, 460px);
@@ -129,7 +165,13 @@ h1 { margin: 6px 0 0; font-size: 28px; }
 .dialog-text { min-height: 92px; line-height: 1.7; white-space: pre-line; }
 .dialog-choices { display: grid; gap: 8px; margin-bottom: 10px; }
 .dialog-choices button { background: #edf3e9; }
-#nextDialogButton, #closeQuestButton { background: #cfe2c4; }
+#nextDialogButton, #closeQuestButton, #confirmDiscoveryButton { background: #cfe2c4; }
+.dialog-secondary { margin-top: 9px; background: #edf1eb !important; }
+.discovery-box { text-align: center; }
+.discovery-icon { font-size: 70px; }
+.discovery-kicker { margin: 8px 0 3px; font-size: 12px; font-weight: 900; letter-spacing: .12em; color: #6a776b; }
+.discovery-box h2 { margin: 4px 0 10px; }
+.grade-badge { display: inline-block; padding: 5px 10px; border-radius: 999px; background: #d84b44; color: #fff; font-size: 12px; font-weight: 900; }
 .quest-list { padding: 0; list-style: none; }
 .quest-list li {
   display: flex;
