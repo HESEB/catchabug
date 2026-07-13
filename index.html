@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>버그캡쳐 V1.0 - 호박사 연구소</title>
+  <title>버그캡쳐 V1.0</title>
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
@@ -12,12 +12,12 @@
       <header class="topbar">
         <div>
           <p class="eyebrow">BUG CAPTURE</p>
-          <h1>호박사 연구소</h1>
+          <h1 id="screenTitle">호박사 연구소</h1>
         </div>
         <span id="capchaStatus" class="badge">신입 Capcha 후보</span>
       </header>
 
-      <section class="lab-scene" aria-label="호박사 연구소">
+      <section id="labScene" class="scene lab-scene" aria-label="호박사 연구소">
         <div class="glass-dome"></div>
         <div class="plant plant-left">🌿</div>
         <div class="plant plant-right">🌱</div>
@@ -28,15 +28,39 @@
         </button>
       </section>
 
+      <section id="fieldScene" class="scene field-scene hidden" aria-label="시작마을 인근 들판">
+        <div class="sun">☀️</div>
+        <div class="cloud cloud-one">☁️</div>
+        <div class="cloud cloud-two">☁️</div>
+        <div class="field-tree">🌳</div>
+        <div id="playerMarker" class="player-marker">🧢</div>
+        <div class="field-label">첫 들판</div>
+      </section>
+
       <section class="info-panel">
         <div>
           <span>현재 지역</span>
           <strong id="regionName">호박사 연구소</strong>
         </div>
         <div>
+          <span>가상 좌표</span>
+          <strong id="positionText">0, 0</strong>
+        </div>
+        <div class="wide-info">
           <span>현재 임무</span>
           <strong id="questSummary">없음</strong>
         </div>
+      </section>
+
+      <button id="travelButton" class="primary hidden" type="button">들판으로 나가기</button>
+
+      <section id="moveControls" class="move-controls hidden" aria-label="가상 이동 조작">
+        <button type="button" data-dx="0" data-dy="-1">▲</button>
+        <div>
+          <button type="button" data-dx="-1" data-dy="0">◀</button>
+          <button type="button" data-dx="1" data-dy="0">▶</button>
+        </div>
+        <button type="button" data-dx="0" data-dy="1">▼</button>
       </section>
 
       <button id="questButton" class="secondary" type="button">임무 확인</button>
@@ -51,10 +75,7 @@
 
   <div id="dialogOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
     <section class="dialog-box">
-      <div class="speaker-row">
-        <span class="speaker-icon">🥼</span>
-        <strong>호박사</strong>
-      </div>
+      <div class="speaker-row"><span class="speaker-icon">🥼</span><strong>호박사</strong></div>
       <p id="dialogText" class="dialog-text"></p>
       <div id="dialogChoices" class="dialog-choices"></div>
       <button id="nextDialogButton" type="button">다음</button>
@@ -63,10 +84,7 @@
 
   <div id="questOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
     <section class="dialog-box">
-      <div class="speaker-row">
-        <span class="speaker-icon">📋</span>
-        <strong>신입 Capcha 시험</strong>
-      </div>
+      <div class="speaker-row"><span class="speaker-icon">📋</span><strong>신입 Capcha 시험</strong></div>
       <p>연구소 인근 들판에서 다음 곤충을 채집하세요.</p>
       <ul class="quest-list">
         <li>일개미 <span>미완료</span></li>
