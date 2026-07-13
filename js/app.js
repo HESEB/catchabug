@@ -2,12 +2,20 @@
   "use strict";
 
   var SAVE_KEY = "bugcapture_save_v1";
+  var ANT_POSITION = { x: 2, y: -1 };
 
   function defaultState() {
     return {
       version: 1,
       player: { name: "Capcha", status: "신입 Capcha 후보" },
-      world: { regionId: "research_lab", x: 0, y: 0 },
+      world: {
+        regionId: "research_lab",
+        x: 0,
+        y: 0,
+        encounters: {
+          worker_ant: { discovered: false }
+        }
+      },
       quests: {
         main_capcha_test: {
           accepted: false,
@@ -33,6 +41,8 @@
   var labScene = document.getElementById("labScene");
   var fieldScene = document.getElementById("fieldScene");
   var playerMarker = document.getElementById("playerMarker");
+  var workerAntMarker = document.getElementById("workerAntMarker");
+  var bugMarkerLabel = document.getElementById("bugMarkerLabel");
   var professorButton = document.getElementById("professorButton");
   var travelButton = document.getElementById("travelButton");
   var moveControls = document.getElementById("moveControls");
@@ -54,6 +64,11 @@
   var nextDialogButton = document.getElementById("nextDialogButton");
   var questOverlay = document.getElementById("questOverlay");
   var closeQuestButton = document.getElementById("closeQuestButton");
+  var discoveryOverlay = document.getElementById("discoveryOverlay");
+  var discoveryName = document.getElementById("discoveryName");
+  var discoveryText = document.getElementById("discoveryText");
+  var confirmDiscoveryButton = document.getElementById("confirmDiscoveryButton");
+  var leaveDiscoveryButton = document.getElementById("leaveDiscoveryButton");
 
   var introLines = [
     "어서 오게! 자네가 오늘부터 연구소에서 일하게 될 신입 후보인가?",
@@ -78,6 +93,11 @@
       fresh.world.regionId = data.world.regionId || fresh.world.regionId;
       fresh.world.x = Number(data.world.x || 0);
       fresh.world.y = Number(data.world.y || 0);
+      if (data.world.encounters && data.world.encounters.worker_ant) {
+        fresh.world.encounters.worker_ant.discovered = Boolean(
+          data.world.encounters.worker_ant.discovered
+        );
+      }
     }
     if (data.quests && data.quests.main_capcha_test) {
       fresh.quests.main_capcha_test = Object.assign(
@@ -147,11 +167,27 @@
     }
   }
 
+  function isNearWorkerAnt() {
+    return Math.abs(state.world.x - ANT_POSITION.x)
+      + Math.abs(state.world.y - ANT_POSITION.y) <= 1;
+  }
+
   function renderPlayerPosition() {
     var left = 50 + Math.max(-4, Math.min(4, state.world.x)) * 7;
     var top = 58 + Math.max(-3, Math.min(3, state.world.y)) * 8;
     playerMarker.style.left = left + "%";
     playerMarker.style.top = top + "%";
+  }
+
+  function renderWorkerAnt() {
+    var discovered = state.world.encounters.worker_ant.discovered;
+    var near = isNearWorkerAnt();
+    workerAntMarker.disabled = !near;
+    bugMarkerLabel.textContent = discovered ? "일개미" : "?";
+    workerAntMarker.setAttribute(
+      "aria-label",
+      discovered ? "발견한 일개미" : "정체를 알 수 없는 곤충"
+    );
   }
 
   function render() {
@@ -174,7 +210,10 @@
     questButton.disabled = !quest.accepted;
     questButton.style.opacity = quest.accepted ? "1" : ".45";
 
-    if (inField) renderPlayerPosition();
+    if (inField) {
+      renderPlayerPosition();
+      renderWorkerAnt();
+    }
   }
 
   function closeDialog() {
@@ -227,6 +266,26 @@
     dialogChoices.appendChild(declineButton);
   }
 
+  function openWorkerAntDiscovery() {
+    if (state.world.regionId !== "first_field" || !isNearWorkerAnt()) return;
+
+    var encounter = state.world.encounters.worker_ant;
+    discoveryName.textContent = encounter.discovered ? "일개미" : "알 수 없는 곤충";
+    discoveryText.textContent = encounter.discovered
+      ? "빨강 등급 일개미입니다. 아직 도감이 없어 상세 정보는 기록되지 않습니다."
+      : "작은 곤충이 바쁘게 땅 위를 움직이고 있습니다. 도감이 없어 자세한 정보는 기록할 수 없습니다.";
+    discoveryOverlay.classList.remove("hidden");
+  }
+
+  function confirmWorkerAntDiscovery() {
+    state.world.encounters.worker_ant.discovered = true;
+    saveToBrowser();
+    discoveryName.textContent = "일개미";
+    discoveryText.textContent = "빨강 등급 일개미를 발견했습니다. 채집 기능은 다음 단계에서 열립니다.";
+    renderWorkerAnt();
+    statusEl.textContent = "빨강 등급 일개미를 발견했습니다.";
+  }
+
   professorButton.addEventListener("click", openDialog);
 
   nextDialogButton.addEventListener("click", function () {
@@ -251,7 +310,7 @@
 
     if (state.world.regionId === "research_lab") {
       state.world.regionId = "first_field";
-      statusEl.textContent = "시작마을 인근 들판에 도착했습니다.";
+      statusEl.textContent = "들판에 도착했습니다. 오른쪽 위의 ? 표시를 찾아가세요.";
     } else {
       state.world.regionId = "research_lab";
       statusEl.textContent = "호박사 연구소로 돌아왔습니다.";
@@ -266,8 +325,32 @@
       state.world.x += Number(button.getAttribute("data-dx"));
       state.world.y += Number(button.getAttribute("data-dy"));
       render();
-      statusEl.textContent = "들판에서 한 칸 이동했습니다.";
+
+      if (isNearWorkerAnt()) {
+        statusEl.textContent = "근처에서 작은 움직임이 감지됩니다. 곤충 표시를 눌러보세요.";
+      } else {
+        statusEl.textContent = "들판에서 한 칸 이동했습니다.";
+      }
     });
+  });
+
+  workerAntMarker.addEventListener("click", openWorkerAntDiscovery);
+
+  confirmDiscoveryButton.addEventListener("click", function () {
+    if (!state.world.encounters.worker_ant.discovered) {
+      confirmWorkerAntDiscovery();
+    } else {
+      discoveryOverlay.classList.add("hidden");
+    }
+  });
+
+  leaveDiscoveryButton.addEventListener("click", function () {
+    discoveryOverlay.classList.add("hidden");
+    statusEl.textContent = "일개미를 채집하지 않고 지나갔습니다.";
+  });
+
+  discoveryOverlay.addEventListener("click", function (event) {
+    if (event.target === discoveryOverlay) discoveryOverlay.classList.add("hidden");
   });
 
   questButton.addEventListener("click", function () {
@@ -285,7 +368,7 @@
 
   saveButton.addEventListener("click", function () {
     if (saveToBrowser()) {
-      statusEl.textContent = "현재 지역과 좌표를 저장했습니다.";
+      statusEl.textContent = "현재 진행 상태를 저장했습니다.";
     } else {
       downloadSaveFile();
       statusEl.textContent = "브라우저 저장이 차단되어 저장 파일을 내려받았습니다.";
@@ -295,7 +378,7 @@
   loadButton.addEventListener("click", function () {
     if (loadFromBrowser()) {
       render();
-      statusEl.textContent = "저장된 지역과 좌표를 불러왔습니다.";
+      statusEl.textContent = "저장된 진행 상태를 불러왔습니다.";
     } else {
       fileInput.value = "";
       fileInput.click();
