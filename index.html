@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>버그캡쳐 V1.0</title>
   <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/step5-5.css">
 </head>
 <body>
   <main class="app-shell">
@@ -112,6 +113,20 @@
     </section>
   </div>
 
+  <div id="captureChoiceOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog-box capture-choice-box">
+      <div class="capture-choice-icon">🐜</div>
+      <p class="discovery-kicker">일개미와 마주쳤다</p>
+      <h2 class="capture-choice-title">어떻게 할까?</h2>
+      <p class="capture-note">채집을 시도하거나 조용히 지나갈 수 있습니다.</p>
+      <div class="capture-choice-actions">
+        <button id="startCaptureButton" class="capture-start" type="button">채집 시도</button>
+        <button id="passCaptureButton" class="capture-pass" type="button">지나가기</button>
+      </div>
+    </section>
+  </div>
+
   <script src="./js/app.js"></script>
+  <script src="./js/step5-5.js"></script>
 </body>
 </html>
