@@ -33,6 +33,10 @@
         <div class="cloud cloud-one">☁️</div>
         <div class="cloud cloud-two">☁️</div>
         <div class="field-tree">🌳</div>
+        <button id="workerAntMarker" class="bug-marker" type="button" aria-label="들판의 곤충">
+          <span class="bug-icon">🐜</span>
+          <span id="bugMarkerLabel" class="bug-label">?</span>
+        </button>
         <div id="playerMarker" class="player-marker">🧢</div>
         <div class="field-label">첫 들판</div>
       </section>
@@ -93,6 +97,18 @@
         <li>메뚜기 <span>미완료</span></li>
       </ul>
       <button id="closeQuestButton" type="button">닫기</button>
+    </section>
+  </div>
+
+  <div id="discoveryOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
+    <section class="dialog-box discovery-box">
+      <div class="discovery-icon">🐜</div>
+      <p class="discovery-kicker">새로운 곤충 발견</p>
+      <h2 id="discoveryName">알 수 없는 곤충</h2>
+      <span class="grade-badge">빨강 등급</span>
+      <p id="discoveryText" class="dialog-text">도감이 없어 자세한 정보는 기록할 수 없습니다.</p>
+      <button id="confirmDiscoveryButton" type="button">발견 확인</button>
+      <button id="leaveDiscoveryButton" class="dialog-secondary" type="button">지나가기</button>
     </section>
   </div>
 
