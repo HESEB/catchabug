@@ -16,138 +16,21 @@
 <body>
   <main class="app-shell">
     <section class="game-card">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">BUG CAPTURE</p>
-          <h1 id="screenTitle">호박사 연구소</h1>
-        </div>
-        <span id="capchaStatus" class="badge">신입 Capcha 후보</span>
-      </header>
-
-      <section id="labScene" class="scene lab-scene" aria-label="호박사 연구소">
-        <div class="glass-dome"></div>
-        <div class="plant plant-left">🌿</div>
-        <div class="plant plant-right">🌱</div>
-        <button id="professorButton" class="professor" type="button" aria-label="호박사와 대화">
-          <span class="professor-icon">🥼</span>
-          <span class="professor-name">호박사</span>
-          <span class="talk-hint">눌러서 대화</span>
-        </button>
-      </section>
-
-      <section id="fieldScene" class="scene field-scene hidden" aria-label="시작마을 인근 들판">
-        <div class="sun">☀️</div>
-        <div class="cloud cloud-one">☁️</div>
-        <div class="cloud cloud-two">☁️</div>
-        <div class="field-tree">🌳</div>
-        <button id="workerAntMarker" class="bug-marker" type="button" aria-label="들판의 곤충">
-          <span class="bug-icon">🐜</span>
-          <span id="bugMarkerLabel" class="bug-label">?</span>
-        </button>
-        <div id="playerMarker" class="player-marker">🧢</div>
-        <div class="field-label">첫 들판</div>
-      </section>
-
-      <section class="info-panel">
-        <div><span>현재 지역</span><strong id="regionName">호박사 연구소</strong></div>
-        <div><span>가상 좌표</span><strong id="positionText">0, 0</strong></div>
-        <div class="wide-info"><span>현재 임무</span><strong id="questSummary">없음</strong></div>
-      </section>
-
+      <header class="topbar"><div><p class="eyebrow">BUG CAPTURE</p><h1 id="screenTitle">호박사 연구소</h1></div><span id="capchaStatus" class="badge">신입 Capcha 후보</span></header>
+      <section id="labScene" class="scene lab-scene" aria-label="호박사 연구소"><div class="glass-dome"></div><div class="plant plant-left">🌿</div><div class="plant plant-right">🌱</div><button id="professorButton" class="professor" type="button" aria-label="호박사와 대화"><span class="professor-icon">🥼</span><span class="professor-name">호박사</span><span class="talk-hint">눌러서 대화</span></button></section>
+      <section id="fieldScene" class="scene field-scene hidden" aria-label="시작마을 인근 들판"><div class="sun">☀️</div><div class="cloud cloud-one">☁️</div><div class="cloud cloud-two">☁️</div><div class="field-tree">🌳</div><button id="workerAntMarker" class="bug-marker" type="button" aria-label="들판의 곤충"><span class="bug-icon">🐜</span><span id="bugMarkerLabel" class="bug-label">?</span></button><div id="playerMarker" class="player-marker">🧢</div><div class="field-label">첫 들판</div></section>
+      <section class="info-panel"><div><span>현재 지역</span><strong id="regionName">호박사 연구소</strong></div><div><span>가상 좌표</span><strong id="positionText">0, 0</strong></div><div class="wide-info"><span>현재 임무</span><strong id="questSummary">없음</strong></div></section>
       <button id="travelButton" class="primary hidden" type="button">들판으로 나가기</button>
-      <section id="moveControls" class="move-controls hidden" aria-label="가상 이동 조작">
-        <button type="button" data-dx="0" data-dy="-1">▲</button>
-        <div><button type="button" data-dx="-1" data-dy="0">◀</button><button type="button" data-dx="1" data-dy="0">▶</button></div>
-        <button type="button" data-dx="0" data-dy="1">▼</button>
-      </section>
-
-      <button id="questButton" class="secondary" type="button">임무 확인</button>
-      <button id="saveButton" class="secondary" type="button">저장</button>
-      <button id="loadButton" class="secondary" type="button">저장 불러오기</button>
-      <button id="resetButton" class="ghost" type="button">테스트 데이터 초기화</button>
-      <input id="fileInput" type="file" accept=".json,application/json" hidden>
-      <p id="status" class="status">호박사를 눌러 대화를 시작하세요.</p>
+      <section id="moveControls" class="move-controls hidden" aria-label="가상 이동 조작"><button type="button" data-dx="0" data-dy="-1">▲</button><div><button type="button" data-dx="-1" data-dy="0">◀</button><button type="button" data-dx="1" data-dy="0">▶</button></div><button type="button" data-dx="0" data-dy="1">▼</button></section>
+      <button id="questButton" class="secondary" type="button">임무 확인</button><button id="saveButton" class="secondary" type="button">저장</button><button id="loadButton" class="secondary" type="button">저장 불러오기</button><button id="resetButton" class="ghost" type="button">테스트 데이터 초기화</button><input id="fileInput" type="file" accept=".json,application/json" hidden><p id="status" class="status">호박사를 눌러 대화를 시작하세요.</p>
     </section>
   </main>
-
-  <div id="dialogOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box">
-      <div class="speaker-row"><span class="speaker-icon">🥼</span><strong>호박사</strong></div>
-      <p id="dialogText" class="dialog-text"></p>
-      <div id="dialogChoices" class="dialog-choices"></div>
-      <button id="nextDialogButton" type="button">다음</button>
-    </section>
-  </div>
-
-  <div id="questOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box">
-      <div class="speaker-row"><span class="speaker-icon">📋</span><strong>신입 Capcha 시험</strong></div>
-      <p>연구소 인근 들판에서 다음 곤충을 채집하세요.</p>
-      <ul class="quest-list"><li>일개미 <span>미완료</span></li><li>장군개미 <span>미완료</span></li><li>여왕개미 <span>미완료</span></li><li>메뚜기 <span>미완료</span></li></ul>
-      <button id="closeQuestButton" type="button">닫기</button>
-    </section>
-  </div>
-
-  <div id="discoveryOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box discovery-box">
-      <div class="discovery-icon">🐜</div>
-      <p class="discovery-kicker">새로운 곤충 발견</p>
-      <h2 id="discoveryName">알 수 없는 곤충</h2>
-      <span class="grade-badge">빨강 등급</span>
-      <p id="discoveryText" class="dialog-text">도감이 없어 자세한 정보는 기록할 수 없습니다.</p>
-      <button id="confirmDiscoveryButton" type="button">발견 확인</button>
-      <button id="leaveDiscoveryButton" class="dialog-secondary" type="button">지나가기</button>
-    </section>
-  </div>
-
-  <div id="captureChoiceOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box capture-choice-box">
-      <div class="capture-choice-icon">🐜</div>
-      <p class="discovery-kicker">일개미와 마주쳤다</p>
-      <h2 class="capture-choice-title">어떻게 할까?</h2>
-      <p class="capture-note">채집을 시도하거나 조용히 지나갈 수 있습니다.</p>
-      <div class="capture-choice-actions">
-        <button id="startCaptureButton" class="capture-start" type="button">채집 시도</button>
-        <button id="passCaptureButton" class="capture-pass" type="button">지나가기</button>
-      </div>
-    </section>
-  </div>
-
-  <div id="captureGameOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box capture-game-box">
-      <div class="capture-game-icon">🥅 🐜</div>
-      <p class="discovery-kicker">채집 타이밍</p>
-      <h2>초록 구간에서 멈추세요</h2>
-      <section class="sensitivity-panel" aria-label="곤충 민감도">
-        <div class="sensitivity-head"><span>일개미 민감도</span><strong id="sensitivityValue">0%</strong></div>
-        <div class="sensitivity-track"><div id="sensitivityFill" class="sensitivity-fill"></div></div>
-        <p id="bugReaction" class="bug-reaction">일개미는 아직 침착합니다.</p>
-      </section>
-      <div id="timingTrack" class="timing-track">
-        <div id="timingZone" class="timing-zone"></div>
-        <div id="timingPerfect" class="timing-zone-perfect"></div>
-        <div id="timingMarker" class="timing-marker"></div>
-      </div>
-      <p id="captureResult" class="capture-result"></p>
-      <p class="capture-help">진한 초록은 PERFECT, 연한 초록은 GREAT 또는 GOOD 구간입니다.</p>
-      <div class="capture-game-actions">
-        <button id="stopTimingButton" class="capture-stop" type="button">지금!</button>
-        <button id="retryTimingButton" class="capture-retry" type="button" hidden>다시 시도</button>
-        <button id="exitTimingButton" class="capture-exit" type="button">들판으로 돌아가기</button>
-      </div>
-    </section>
-  </div>
-
-  <div id="escapeOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true">
-    <section class="dialog-box escape-box">
-      <div class="escape-icon">🐜💨</div>
-      <p class="discovery-kicker">곤충 도주</p>
-      <h2 class="escape-title">일개미가 도망쳤다!</h2>
-      <p class="escape-text">민감도가 100%가 되어 더는 접근할 수 없습니다.<br>연구소로 돌아갔다가 다시 들판에 오면 새로운 일개미가 나타납니다.</p>
-      <button id="confirmEscapeButton" class="escape-confirm" type="button">들판으로 돌아가기</button>
-    </section>
-  </div>
-
+  <div id="dialogOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box"><div class="speaker-row"><span class="speaker-icon">🥼</span><strong>호박사</strong></div><p id="dialogText" class="dialog-text"></p><div id="dialogChoices" class="dialog-choices"></div><button id="nextDialogButton" type="button">다음</button></section></div>
+  <div id="questOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box"><div class="speaker-row"><span class="speaker-icon">📋</span><strong>신입 Capcha 시험</strong></div><p>연구소 인근 들판에서 다음 곤충을 채집하세요.</p><ul class="quest-list"><li>일개미 <span>미완료</span></li><li>장군개미 <span>미완료</span></li><li>여왕개미 <span>미완료</span></li><li>메뚜기 <span>미완료</span></li></ul><button id="closeQuestButton" type="button">닫기</button></section></div>
+  <div id="discoveryOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box discovery-box"><div class="discovery-icon">🐜</div><p class="discovery-kicker">새로운 곤충 발견</p><h2 id="discoveryName">알 수 없는 곤충</h2><span class="grade-badge">빨강 등급</span><p id="discoveryText" class="dialog-text">도감이 없어 자세한 정보는 기록할 수 없습니다.</p><button id="confirmDiscoveryButton" type="button">발견 확인</button><button id="leaveDiscoveryButton" class="dialog-secondary" type="button">지나가기</button></section></div>
+  <div id="captureChoiceOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box capture-choice-box"><div class="capture-choice-icon">🐜</div><p class="discovery-kicker">일개미와 마주쳤다</p><h2 class="capture-choice-title">어떻게 할까?</h2><p class="capture-note">채집을 시도하거나 조용히 지나갈 수 있습니다.</p><div class="capture-choice-actions"><button id="startCaptureButton" class="capture-start" type="button">채집 시도</button><button id="passCaptureButton" class="capture-pass" type="button">지나가기</button></div></section></div>
+  <div id="captureGameOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box capture-game-box"><div class="capture-game-icon">🥅 🐜</div><p class="discovery-kicker">채집 타이밍</p><h2>초록 구간에서 멈추세요</h2><section class="sensitivity-panel" aria-label="곤충 민감도"><div class="sensitivity-head"><span>일개미 민감도</span><strong id="sensitivityValue">0%</strong></div><div class="sensitivity-track"><div id="sensitivityFill" class="sensitivity-fill"></div></div><p id="bugReaction" class="bug-reaction">일개미는 아직 침착합니다.</p></section><div id="timingTrack" class="timing-track"><div id="timingZone" class="timing-zone"></div><div id="timingPerfect" class="timing-zone-perfect"></div><div id="timingMarker" class="timing-marker"></div></div><p id="captureResult" class="capture-result"></p><p class="capture-help">진한 초록은 PERFECT, 연한 초록은 GREAT 또는 GOOD 구간입니다.</p><div class="capture-game-actions"><button id="stopTimingButton" class="capture-stop" type="button">지금!</button><button id="retryTimingButton" class="capture-retry" type="button" hidden>다시 시도</button><button id="exitTimingButton" class="capture-exit" type="button">들판으로 돌아가기</button></div></section></div>
+  <div id="escapeOverlay" class="dialog-overlay hidden" role="dialog" aria-modal="true"><section class="dialog-box escape-box"><div class="escape-icon">🐜💨</div><p class="discovery-kicker">곤충 도주</p><h2 class="escape-title">일개미가 도망쳤다!</h2><p class="escape-text">민감도가 100%가 되어 더는 접근할 수 없습니다.<br>연구소로 돌아갔다가 다시 들판에 오면 새로운 일개미가 나타납니다.</p><button id="confirmEscapeButton" class="escape-confirm" type="button">들판으로 돌아가기</button></section></div>
   <script src="./js/app.js"></script>
   <script src="./js/step5-5.js"></script>
   <script src="./js/step5-6.js"></script>
@@ -156,5 +39,7 @@
   <script src="./js/step5-10.js"></script>
   <script src="./js/step5-11.js"></script>
   <script src="./js/step5-14.js"></script>
+  <script src="./js/step5-15.js"></script>
+  <script src="./js/step5-16.js"></script>
 </body>
 </html>
